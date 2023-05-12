@@ -1,90 +1,84 @@
 <!DOCTYPE html>
-<html>
-<head> 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlaceID Finder</title> 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />  
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-<!-- Google Maps JavaScript library -->
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyBtRg8DNjSOxtwcEiZiUcDwgcTH0RnBloE"></script>
- 
-<style>
-#search_input {font-size:18px;}
-.form-group{
- margin-bottom: 10px;margin-top:50px;
-}
-.form-group label{
- font-size:18px;
- font-weight: 600;
-}
-.form-group input{
-    width: 100%;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-.form-group input:focus {
-    color: #495057;
-    background-color: #fff;
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-}
-</style>
-</head>
-<body>
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <p><h1>KraftPixel Team Initiative</h1></p>
-           <!-- Autocomplete location search input --> 
-              <div class="form-group">
-                <label>Location:</label>
-                <input type="text" class="form-control" id="search_input" placeholder="Type address..." />
-              </div>
-     </div>
-   </div>
+<html lang="en">
 
-   <p id="place_id">Hi</p>
-   <div id="qrcode-container"></div>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn" value="Click me" type="submit">Click me</button>
+</body>
+
+</html>
 
 <script>
-var searchInput = 'search_input';
- 
-$(document).ready(function () {
- var autocomplete;
- const input = document.getElementById(searchInput);
- autocomplete = new google.maps.places.Autocomplete(input, {
-  fields: ["place_id", "geometry", "name", "formatted_address"],
- });
-  
- google.maps.event.addListener(autocomplete, 'place_changed', function () {
-  var near_place = autocomplete.getPlace();
-  const newPlaceId = near_place.place_id;
-    if(newPlaceId){
-        const url = `https://search.google.com/local/writereview?placeid=${newPlaceId}`; 
-        const qrCodeContainer = document.getElementById("qrcode-container");
-        qrCode = new QRCode(qrCodeContainer, {
-                text: url,
-                width: 256,
-                height: 256,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-       }  
-    });
-});
+    const btn = document.getElementById("btn");
+
+    function sendData(data) {
+      const XHR = new XMLHttpRequest();
+            XHR.withCredentials = true;
+      const FD = new FormData();
+
+      FD.append("location_url", data);
+
+      // Define what happens on successful data submission
+      XHR.addEventListener("load", (event) => {
+        alert("Yeah! Data sent and response loaded.");
+        console.log(event);
+      });
+
+      // Define what happens in case of an error
+      XHR.addEventListener("error", (event) => {
+        alert("Oops! Something went wrong.");
+      });
+
+      // Set up our request
+      XHR.open("POST", "http://sqr.co/api/links");
+
+      XHR.setRequestHeader("Authorization", "Bearer 20383299e20dd56477d9dc0d84de7211");
+      XHR.setRequestHeader("Content-Type", "multipart/form-data");
+     
+
+      XHR.send(FD);
+    }
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault;
+      sendData("https://www.twitter.com/")
+      });
+
+//     async function getUser() {
+//         try {
+//             const response = await fetch('https://sqr.co/api', { method: 'POST',
+
+//                 headers: 
+//                 {
+//                     'X-Auth-Token': '20383299e20dd56477d9dc0d84de7211',
+//                      withCredentials: true,    
+//                      crossorigin: true,    
+//                      mode: 'no-cors',     
+//                 },
+//         });
+
+//     if (!response.ok) {
+
+//         throw new Error(`Error! status: ${response.status}`);
+//     }
+
+//     const result = await response.json();
+
+//     return result;} catch (err) {
+
+//         console.log(err);
+//     }
+
+// }
+
+//     btn.addEventListener('click', () => {
+//         getUser();
+//     });
+
 </script>
-</body>
-</html>
